@@ -1,0 +1,147 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-inner, .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+}
+
+.nav-inner { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+
+.brand, .nav-link, .side-link, .footer-grid a {
+  text-decoration: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--navy);
+}
+
+.brand small, .sidebar-kicker { display: block; color: var(--muted); font-size: 0.78rem; }
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+}
+
+.nav-links { display: flex; align-items: center; gap: 6px; }
+.nav-link { padding: 8px 10px; border-radius: 8px; color: var(--navy); font-weight: 700; }
+.nav-link.active { background: var(--teal-soft); color: var(--teal-dark); }
+.nav-toggle { display: none; }
+.nav-cta { margin-left: 8px; }
+
+.demo-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  padding: 10px 16px;
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  color: var(--amber);
+}
+
+.demo-bar a { font-weight: 700; }
+
+.hero { padding: 48px 0 24px; }
+.hero-grid, .detail-grid, .footer-grid { display: grid; gap: 24px; }
+.hero-panel { padding: 18px; }
+.hero-list a { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.hero-list a b { margin-left: auto; white-space: nowrap; }
+.hero-list span { display: grid; min-width: 0; }
+.section { padding: 28px 0 40px; }
+.section-muted { background: #eef3f8; }
+.section-heading { margin-bottom: 16px; }
+
+.site-footer { margin-top: 12px; padding: 28px 0; background: var(--navy); color: #dbe4ee; }
+.site-footer a { color: #fff; display: block; margin-top: 6px; }
+.footer-meta { margin-top: 18px; }
+.api-status { color: #cbd5e1; }
+
+.shell { display: flex; min-height: 100vh; background: var(--bg); }
+.sidebar {
+  width: 250px;
+  flex: 0 0 250px;
+  min-height: 100vh;
+  padding: 20px 14px;
+  background: var(--navy);
+  color: #fff;
+}
+.sidebar-title { margin: 0 0 18px; color: #fff; font-size: 1.3rem; }
+.sidebar-kicker { color: #99f6e4; }
+.side-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #e2e8f0;
+  font-weight: 700;
+}
+.side-link.active, .side-link:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.sidebar-foot { margin-top: 24px; padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+.shell-main { flex: 1; min-width: 0; }
+.topbar { padding: 0 20px; background: #fff; border-bottom: 1px solid var(--line); }
+.topbar p { color: var(--muted); font-weight: 700; }
+.shell-content { width: min(1100px, 100%); padding: 20px; }
+.sidebar-backdrop { display: none; }
+
+@media (min-width: 900px) {
+  .hero-grid { grid-template-columns: 1.25fr 0.75fr; align-items: center; }
+  .detail-grid { grid-template-columns: 1.4fr 0.6fr; align-items: start; }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr; }
+  .detail-aside { position: sticky; top: 88px; }
+  .topbar .nav-toggle { display: none; }
+}
+
+@media (max-width: 899px) {
+  .nav-toggle { display: inline-flex; }
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-links.open { display: flex; flex-direction: column; align-items: stretch; }
+  .nav-cta { margin: 4px 0 0; }
+  .site-header { position: sticky; }
+  .nav-inner { position: static; }
+  .site-header { position: relative; }
+  .sidebar {
+    position: fixed;
+    z-index: 40;
+    inset: 0 auto 0 0;
+    transform: translateX(-105%);
+    transition: transform 0.2s ease;
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    border: 0;
+    background: rgba(15, 39, 68, 0.45);
+  }
+}
