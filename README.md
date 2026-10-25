@@ -186,9 +186,21 @@ Administration, all requiring an active administrator:
 
 ## Deployment
 
-This repository has not been deployed to a public host.
+This repository is prepared for one Vercel project, but a deployment has not been run from this workspace. Do not treat the configuration as a live site.
 
-For a single computer or server, build the client and start Express in production. Set `NODE_ENV=production` and set `CLIENT_ORIGIN` to the public origin, including `https://` when the site uses HTTPS. The cookie is marked Secure only when both of those are true.
+Vercel serves `client/dist` and sends `/api/*` to the Express app in `api/index.js`. The browser keeps calling `/api` on the same HTTPS origin, so the sign-in cookie stays on that site. `express.static()` is not used on Vercel; local `npm start` still serves the built client itself.
+
+Set these names in the Vercel project. Do not commit their values:
+
+- `MONGODB_URI`
+- `CLIENT_ORIGIN` — `https://` plus the Vercel domain, without a trailing slash
+- `JWT_SECRET`
+- `JWT_EXPIRES_IN`
+- `VITE_API_URL` — `/api`
+
+In Atlas, allow the deployment to connect. Vercel does not provide one fixed outbound address on the standard plan.
+
+For a single computer, build the client and start Express in production. Set `NODE_ENV=production` and set `CLIENT_ORIGIN` to the public origin, including `https://` when the site uses HTTPS. The cookie is marked Secure on Vercel, and also when production uses an `https://` origin.
 
 ```powershell
 npm run build --prefix client

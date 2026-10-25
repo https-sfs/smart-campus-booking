@@ -52,7 +52,7 @@ export const env = {
   clientOrigin,
   jwtSecret,
   jwtExpiresIn: optional('JWT_EXPIRES_IN', '7d'),
-  cookieSecure: nodeEnv === 'production' && clientOrigin.startsWith('https://'),
+  cookieSecure: Boolean(process.env.VERCEL) || (nodeEnv === 'production' && clientOrigin.startsWith('https://')),
   isTest: nodeEnv === 'test',
 }
 

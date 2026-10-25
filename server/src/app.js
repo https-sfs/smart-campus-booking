@@ -12,9 +12,12 @@ import { bookingRouter } from './routes/bookingRoutes.js'
 import { paymentRouter } from './routes/paymentRoutes.js'
 import { feedbackRouter } from './routes/feedbackRoutes.js'
 import { adminRouter } from './routes/adminRoutes.js'
+import { connectDatabase } from './config/db.js'
 import { requireDatabase } from './middleware/requireDatabase.js'
 import { notFound } from './middleware/notFound.js'
 import { errorHandler } from './middleware/errorHandler.js'
+import { sanitizeMessage } from './utils/http.js'
+import mongoose from 'mongoose'
 
 export function createApp() {
   const app = express()
@@ -42,11 +45,30 @@ export function createApp() {
       : false,
   }))
   app.use(cors({
-    origin: env.clientOrigin,
+    origin(origin, callback) {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true)
+        return
+      }
+      callback(null, false)
+    },
     credentials: true,
   }))
   app.use(express.json({ limit: '100kb' }))
   app.use(cookieParser())
+  app.use((req, res, next) => {
+    if (mongoose.connection.readyState === 1) {
+      next()
+      return
+    }
+
+    connectDatabase(env.mongoUri)
+      .then(() => next())
+      .catch((error) => {
+        console.error(`MongoDB connection failed: ${sanitizeMessage(error.message)}`)
+        next()
+      })
+  })
 
   app.use('/api/health', healthRouter)
   app.use('/api', requireDatabase)
@@ -78,4 +100,13 @@ export function createApp() {
   app.use(errorHandler)
 
   return app
+}
+
+function isAllowedOrigin(origin) {
+  if (!origin || origin === env.clientOrigin) {
+    return true
+  }
+
+  const vercelHosts = [process.env.VERCEL_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL]
+  return vercelHosts.some((host) => host && origin === `https://${host}`)
 }

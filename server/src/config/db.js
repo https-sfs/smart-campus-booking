@@ -32,17 +32,33 @@ async function useReachableDns() {
   }
 }
 
+let pendingConnection
+
 export async function connectDatabase(mongoUri) {
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection
+  }
+
+  if (!pendingConnection) {
+    pendingConnection = openDatabase(mongoUri).catch((error) => {
+      pendingConnection = null
+      throw error
+    })
+  }
+
+  return pendingConnection
+}
+
+async function openDatabase(mongoUri) {
   mongoose.set('strictQuery', true)
   await useReachableDns()
 
-  const options = { serverSelectionTimeoutMS: 8000 }
+  const options = { serverSelectionTimeoutMS: process.env.VERCEL ? 15000 : 8000 }
   if (!databaseName(mongoUri)) {
     options.dbName = 'smart-campus-booking'
   }
 
   await mongoose.connect(mongoUri, options)
-
   return mongoose.connection
 }
 
